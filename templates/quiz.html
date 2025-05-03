@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> <!-- 设置字符编码为UTF-8 -->
+    <title>菜鸡挑战赛</title> <!-- 设置网页标题 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- 引入外部CSS文件 -->
+</head>
+<body>
+<h1>题目列表</h1> <!-- 设置主标题 -->
+
+<form method="POST" action="/submit"> <!-- 表单提交设置为POST方法，指定提交的目标地址为/submit -->
+    <!--这是一个隐藏的输入字段，用户在页面上看不到它，但它会随着表单一起提交。 name="category" 表示这个隐藏字段存储的是题目分类的信息-->
+    <!--name="difficulty" 表示这个隐藏字段存储的是题目难度的信息 value 属性定义了隐藏字段的值，里面的值后端传递到前端的变量值-->
+    <!--隐藏字段的值通常是通过后端动态生成的（例如从 URL 参数、数据库查询结果或其他上下文中获取） -->
+    <input type="hidden" name="category" value="{{ category }}"> <!-- 隐藏字段，存储类别信息 -->
+    <input type="hidden" name="difficulty" value="{{ difficulty }}"> <!-- 隐藏字段，存储难度信息 -->
+
+    <!--如果有题目，就会按算法计算有多少道题目，当前第几页 -->
+    {% if questions %} <!-- 如果存在题目 -->
+    <!--pagination为quiz路由里面的的类似对象，total为统计的函数一样的表示结果总数即题目数量，pagination.pages为路由里面的页数 -->
+    <p>共 {{ pagination.total }} 道题目，当前第 {{ pagination.page }} 页，共 {{ pagination.pages }} 页：</p> <!-- 显示总题目数、当前页和总页数 -->
+    {% for question in questions %} <!-- 循环遍历每个题目 -->
+
+    <div class="question"> <!-- 题目容器 -->
+        <!-- 一个段落标签 <p>，用于显示题目的编号和文本内容 loop.index 表示当前循环的索引（从 1 开始）
+        (pagination.page - 1) * pagination.per_page 计算当前页之前的题目数量，确保题目编号是全局连续的
+        question.question_text 显示题目的文本内容，通常是从后端传递到模板的变量-->
+        <p class="question-text">{{ loop.index + (pagination.page - 1) * pagination.per_page }}. {{ question.question_text }}</p> <!-- 显示题目编号和文本 -->
+        <div class="options-container"> <!-- 选项容器 .items() 是 Python 字典的一个方法，返回一个包含所有键值对的可迭代对象-->
+            {% for key, value in question.options.items() %} <!-- 循环遍历每个选项 -->
+            <label class="option"> <!-- 选项标签 -->
+                <input type="radio" name="{{ question.id }}" value="{{ key }}" required> <!-- 单选按钮，name属性为题目ID，value属性为选项键，必填项 -->
+                {{ key }}. {{ value }} <!-- 显示选项键和值 -->
+            </label> <!-- 结束选项标签 -->
+            {% endfor %} <!-- 结束循环 -->
+        </div> <!-- 结束选项容器 -->
+    </div> <!-- 结束题目容器 -->
+    {% endfor %} <!-- 结束循环 -->
+    <button type="submit">提交答案</button> <!-- 提交答案按钮 -->
+
+    <!-- 分页按钮 用于在网页上动态生成分页按钮（如“上一页”、“下一页”和页码）-->
+    <div class="pagination"> <!-- 分页容器 -->
+        {% if pagination.has_prev %} <!-- 如果有上一页 pagination.has_prev: 判断是否存在上一页-->
+        <!-- url_for('quiz', ...)：生成指向指定路由的 URL，并附带查询参数（如分类、难度等级和页码）pagination.prev_num: 获取上一页的页码-->
+        <a href="{{ url_for('quiz', category=category, difficulty=difficulty, page=pagination.prev_num) }}">上一页</a> <!-- 上一页链接 -->
+        {% else %} <!-- 否则 -->
+        <span class="disabled">上一页</span> <!-- 禁用的上一页按钮 如果当前页已经是第一页，则显示一个禁用的“上一页”按钮（使用 <span> 标签）-->
+        {% endif %} <!-- 结束条件判断 -->
+
+        <!--pagination.iter_pages(...): 生成分页页码的迭代器 left_edge=1: 始终显示最左边的 1 页 right_edge=1: 始终显示最右边的 1 页
+        left_current=2: 当前页左侧显示 2 页,right_current=2: 当前页右侧显示 2 页-->
+        {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %} <!-- 循环生成分页数字 -->
+        {% if page_num %} <!-- 如果页码有效 -->
+        {% if page_num == pagination.page %} <!-- 如果是当前页 if page_num == pagination.page: 判断是否为当前页-->
+        <span class="current">{{ page_num }}</span> <!-- 当前页码显示为特殊样式 -->
+        {% else %} <!-- 否则 -->
+        <a href="{{ url_for('quiz', category=category, difficulty=difficulty, page=page_num) }}">{{ page_num }}</a> <!-- 页码链接 -->
+        {% endif %} <!-- 结束条件判断 -->
+        {% else %} <!-- 否则 -->
+        <span>...</span> <!-- 显示省略号 -->
+        {% endif %} <!-- 结束条件判断 -->
+        {% endfor %} <!-- 结束循环 -->
+
+        <!--如果当前页不是最后一页（即存在下一页），则显示一个超链接，指向下一页.如果当前页已经是最后一页，则显示一个禁用的“下一页”按钮（使用 <span> 标签） -->
+        {% if pagination.has_next %} <!-- 如果有下一页 -->
+        <a href="{{ url_for('quiz', category=category, difficulty=difficulty, page=pagination.next_num) }}">下一页</a> <!-- 下一页链接 -->
+        {% else %} <!-- 否则 -->
+        <span class="disabled">下一页</span> <!-- 禁用的下一页按钮 -->
+        {% endif %} <!-- 结束条件判断 -->
+    </div> <!-- 结束分页容器 -->
+    {% else %} <!-- 否则 -->
+    <p>暂无题目，请选择其他分类或难度。</p> <!-- 提示信息 -->
+    {% endif %} <!-- 结束条件判断  前面的那个if-->
+
+</form> <!-- 结束表单 -->
+
+</body>
+</html>
+
+
+

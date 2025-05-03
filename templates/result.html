@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> <!-- 设置字符编码为UTF-8 -->
+    <title>挑战成果</title> <!-- 设置网页标题 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- 引入外部CSS文件 -->
+</head>
+<body>
+<h1>您的结局</h1> <!-- 设置主标题 -->
+
+<p> <!-- 开始段落 -->
+    {% if score >= 90 %} <!-- 如果分数大于等于90 -->
+    <span style="color: green;">恭喜您，{{ score }} 分！</span> <!-- 显示绿色的祝贺信息 -->
+    {% elif score >= 70 %} <!-- 否则如果分数大于等于70 -->
+    <span style="color: orange;">还不错，{{ score }} 分。</span> <!-- 显示橙色的信息 -->
+    {% elif score >= 50 %} <!-- 否则如果分数大于等于50 -->
+    <span style="color: red;">加油哦，{{ score }} 分。</span> <!-- 显示红色的信息 -->
+    {% else %} <!-- 否则 -->
+    <span style="color: darkred;">没有分数，不忍直视</span> <!-- 显示深红色的信息 -->
+    {% endif %} <!-- 结束条件判断 -->
+</p> <!-- 结束段落 -->
+
+<button id="show-wrong-btn">点击查看失败挑战</button> <!-- 显示查看失败挑战按钮 -->
+
+<div id="wrong-questions" style="display: none;"> <!-- 包含错题的容器，默认隐藏 -->
+    {% for wrong in wrong_questions %} <!-- 循环遍历每个错题 -->
+    <div class="wrong-question"> <!-- 错题容器 -->
+        <h3>题目：{{ loop.index }}. {{ wrong.question_text }}</h3> <!-- 显示题目编号和文本 -->
+        {% if wrong.user_answer is none %} <!-- 如果用户未作答 -->
+        <p>您的答案：未选择</p> <!-- 显示未选择的答案信息 -->
+        {% else %} <!-- 否则 -->
+        {% if wrong.user_answer in wrong.options %} <!-- 如果用户答案在选项中 -->
+        <p>您的答案：{{ wrong.user_answer }} - {{ wrong.options[wrong.user_answer] }}</p> <!-- 显示用户答案及其对应文本 -->
+        {% else %} <!-- 否则 -->
+        <p>您的答案：无效选项（{{ wrong.user_answer }}）</p> <!-- 显示无效选项的信息 -->
+        {% endif %} <!-- 结束条件判断 -->
+        {% endif %} <!-- 结束条件判断 -->
+        <p>正确答案：{{ wrong.correct_answer }} - {{ wrong.options[wrong.correct_answer] }}</p> <!-- 显示正确答案及其对应文本 -->
+        <button class="explain-btn" data-beizhu="{{ wrong.beizhu|e }}">错题详解</button> <!-- 显示错题详解按钮 -->
+        <div class="explanation" style="display: none;"></div> <!-- 错题详解内容容器，默认隐藏 -->
+    </div> <!-- 结束错题容器 -->
+    {% endfor %} <!-- 结束循环 -->
+</div> <!-- 结束错题容器 -->
+
+<script src="{{ url_for('static', filename='script.js') }}"></script> <!-- 引入外部JavaScript文件 -->
+<script>
+//document.getElementById 用于通过 HTML 元素的 id 属性获取对应的 DOM 元素,它获取了 id="show-wrong-btn" 的元素，通常是一个按钮（<button> 或 <a> 标签），用户可以通过点击这个按钮来触发某些操作
+//.addEventListener 是为某个 DOM 元素绑定事件监听器的方法。'click' 表示监听的是点击事件，即当用户点击该元素时会触发后续的函数,function() { ... } 是事件处理程序，定义了点击按钮后要执行的操作
+//用户点击 id="show-wrong-btn" 的按钮。点击事件触发后，找到 id="wrong-questions" 的容器元素。调用 toggleVisibility 函数，切换该容器的显示/隐藏状态。
+document.getElementById('show-wrong-btn').addEventListener('click', function() { // 查看失败挑战按钮点击事件监听器
+
+    //这里再次使用 document.getElementById 获取另一个 DOM 元素,id="wrong-questions" 的元素，通常是一个容器（如 <div>），用于显示用户的错题内容
+    //使用 const 声明变量 wrongQuestions，表示这个变量的值不会被重新赋值,
+    const wrongQuestions = document.getElementById('wrong-questions'); // 获取错题容器元素
+    //调用了一个名为 toggleVisibility 的函数，并将 wrongQuestions,toggleVisibility 是一个自定义函数（需要在其他地方定义），它的作用通常是切换某个元素的显示或隐藏状态
+    toggleVisibility(wrongQuestions); // 切换错题容器的显示状态
+});
+
+//document.querySelectorAll('.explain-btn') 是一个 DOM 操作方法,它选择所有具有 class="explain-btn" 的 HTML 元素，并返回一个 NodeList（类似于数组的对象）
+//元素通常是一组按钮，每个按钮用于显示某道题的详细解释,
+const explainButtons = document.querySelectorAll('.explain-btn'); // 获取所有错题详解按钮
+//forEach 是 JavaScript 中的一个数组方法，用于遍历 NodeList 中的每个元素,这里对每个按钮（button）执行相同的操作,即添加点击事件监听器
+explainButtons.forEach(button => { // 对每个按钮添加点击事件监听器
+    button.addEventListener('click', function() { // 点击事件处理函数为当前按钮（button）绑定一个点击事件监听器。当用户点击该按钮时，触发匿名函数 function() { ... } 中定义的操作
+        //this 指向当前点击的按钮,nextElementSibling 是 DOM 属性，表示当前元素的下一个兄弟元素,在这里，假设每个按钮后面紧跟着一个用于显示解释内容的容器（如 <div>），这个容器就是 explanationDiv
+        const explanationDiv = this.nextElementSibling; // 获取相邻的解释容器
+        //调用自定义函数 toggleVisibility，并传入 explanationDiv 作用是切换 explanationDiv 的显示/隐藏状态（例如通过修改 display 样式属性）。如果 explanationDiv 当前是隐藏的，则显示它；如果是显示的，则隐藏它
+        toggleVisibility(explanationDiv); // 切换解释容器的显示状态
+        //ata-beizhu 是一个自定义属性，通常用来存储额外的信息（如题目解释）,当用户点击按钮时，解释容器会显示从 data-beizhu 中获取的内容
+        explanationDiv.textContent = this.getAttribute('data-beizhu'); // 设置解释容器的内容为data-beizhu属性值
+    });
+});
+
+function toggleVisibility(element) { // 定义切换元素显示状态的函数
+//条件判断语句，用来检查当前元素的 display 样式是否为 'none' 或者为空字符串 '',display 是 'none'，说明元素当前是隐藏的,display 是 ''，说明该样式未显式设置
+//三元运算符（condition ? valueIfTrue : valueIfFalse），true 则返回block,false 则none
+    element.style.display = element.style.display === 'none' || element.style.display === '' ? 'block' : 'none'; // 切换显示状态
+}
+</script>
+</body>
+</html>
+
+
+

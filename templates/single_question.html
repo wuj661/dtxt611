@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"> <!-- 设置字符编码为UTF-8 -->
+  <title>单个题目</title> <!-- 设置网页标题 -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- 引入外部CSS文件 -->
+</head>
+<body>
+<h1>题目详情</h1> <!-- 设置主标题 -->
+
+<form method="POST" action="/submit_single"> <!-- 表单提交设置为POST方法，目标地址为/submit_single -->
+  <input type="hidden" name="question_id" value="{{ question.id }}"> <!-- 隐藏字段，存储题目ID -->
+  <div class="question"> <!-- 题目容器 -->
+    <p>{{ question.question_text }}</p> <!-- 显示题目文本 -->
+    <div class="options-container"> <!-- 选项容器 -->
+      {% for key, value in question.options.items() %} <!-- 循环遍历每个选项 -->
+      <label class="option"> <!-- 选项标签 -->
+        <input type="radio" name="{{ question.id }}" value="{{ key }}" required> <!-- 单选按钮，name属性为题目ID，value属性为选项键，必填项 -->
+        {{ key }}. {{ value }} <!-- 显示选项键和值 -->
+      </label> <!-- 结束选项标签 -->
+      {% endfor %} <!-- 结束循环 -->
+    </div> <!-- 结束选项容器 -->
+  </div> <!-- 结束题目容器 -->
+  <button type="submit">提交答案</button> <!-- 提交答案按钮 -->
+</form> <!-- 结束表单 -->
+
+<a href="/" style="margin-top: 20px; display: block;">返回主页</a> <!-- 返回主页链接，设置样式 -->
+</body>
+</html>
+
+
+

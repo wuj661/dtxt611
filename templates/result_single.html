@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"> <!-- 设置字符编码为UTF-8 -->
+  <title>题目结果</title> <!-- 设置网页标题 -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- 引入外部CSS文件 -->
+</head>
+<body>
+<h1>题目结果</h1> <!-- 设置主标题 -->
+
+<p>{{ message }}</p> <!-- 显示消息内容 -->
+
+{% if beizhu %} <!-- 如果存在备注 -->
+<div class="explanation">
+  <h2>备注:</h2> <!-- 设置备注标题 -->
+  <p>{{ beizhu }}</p> <!-- 显示备注内容 -->
+</div>
+{% endif %} <!-- 结束条件判断 -->
+
+<a href="/" style="margin-top: 20px; display: block;">返回主页</a> <!-- 返回主页链接，设置样式 -->
+</body>
+</html>
+
+
+

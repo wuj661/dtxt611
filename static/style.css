@@ -1,0 +1,335 @@
+/*
+body、header、button 是 HTML 标签名，属于 元素选择器，所以不需要加 .。
+   如果是类名（如 .container），则需要加 .；
+   如果是 ID（如 #main-header），则需要加 # #main-header：选中 id="main-header" 的元素
+你想根据属性来选中元素，则需要使用中括号 [ ] 包裹属性 button[type="submit"] {   background-color: green;}
+
+各个属性具有继承性，容器内或容器外都存在，最里面没有就会往外继承，直至最后都没有就默认，部分特殊不能继承的如下
+margin:元素的外边距，控制元素与其他元素之间的间距。
+padding:元素的内边距，控制内容与边框之间的空间。
+border:边框样式，定义围绕元素的线条。
+position:定位方式（如 static, relative, absolute, fixed），确定元素如何根据其他元素进行定位。
+top, right, bottom, left:当使用绝对或相对定位时，用于精确控制元素的位置。
+width, height :设置元素的宽度和高度。
+min-width, max-width, min-height, max-height:控制元素的最小和最大宽度和高度限制。
+background-color, background-image:设置元素的背景颜色或背景图像。
+box-shadow:添加阴影效果到元素周围。
+border-radius:圆角半径，使边框呈现圆角效果
+text-indent:首行缩进。
+vertical-align:垂直对齐方式（通常用于表格单元格或行内元素）
+display:控制元素的显示类型（如 block, inline, none）。
+visibility:控制元素是否可见（如 visible, hidden）
+*/
+/*整个页面的格式设置 */
+body {
+    font-family: Arial, sans-serif; /* 设置全局字体 */
+    max-width: 800px; /* 设置最大宽度 */
+    margin: 20px auto; /* 居中显示 */
+    text-align: center; /* 文本居中对齐 */
+}
+
+/*通用按钮的定义，如果固定按钮部分指标没有定义，就用这里的定义*/
+button {
+    padding: 10px 20px; /* 按钮内边距 */
+    background-color: #007bff; /* 背景颜色 */
+    color: white; /* 文字颜色 */
+    border: none; /* 去掉边框 */
+    cursor: pointer; /* 鼠标悬停时变成指针 */
+    margin: 10px 5px; /* 外边距 */
+    border-radius: 4px; /* 圆角 */
+}
+
+/* :hover：这是一个 伪类选择器，表示当用户将鼠标悬停在该元素上时的状态*/
+button:hover {
+    background-color: #0056b3; /* 悬停时背景颜色变化 */
+}
+
+/* 定义页面头部标题 */
+header {
+    background-color: #6666FF; /* 背景颜色 */
+    color: white; /* 文字颜色 */
+    text-align: center; /* 文本居中对齐 */
+    padding: 15px; /* 内边距 */
+    font-size: 24px; /* 字体大小 */
+}
+
+/*整个大界面的，容器 */
+.container {
+    display: flex; /* 弹性布局 */
+    height: calc(100vh - 60px); /* 高度计算 */
+}
+
+/* -------------------------------------------------------------------------*/
+/*定义侧边栏的格式 */
+.sidebar {
+    width: 100px; /* 宽度 */
+    background-color: #f4f4f4; /* 背景颜色 */
+    padding: 20px; /* 内边距 */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+}
+
+/*定义使用了匹配 .sidebar 内部的所有 <button> 元素 */
+.sidebar button {
+    display: block; /* 块级元素 */
+    width: 100%; /* 宽度 */
+    padding: 10px; /* 内边距 */
+    margin-bottom: 10px; /* 下外边距 */
+    background-color: #f4f4f4; /* 背景颜色 */
+    color: black; /* 文字颜色 */
+    border: none; /* 去掉边框 */
+    cursor: pointer; /* 鼠标悬停时变成指针 */
+    text-align: left; /* 文本左对齐 */
+}
+
+.sidebar button:hover {
+    background-color: #ddd; /* 悬停时背景颜色变化 */
+}
+
+.sidebar button.active {
+    background-color: #555; /* 激活状态背景颜色 */
+    color: white; /* 文字颜色 */
+}
+
+/* ------------------------上面为侧边栏统一格式----------下面是按钮格式---------------------------------------*/
+
+
+/*难度和题目分类的按钮的格式  */
+.category-btn,
+.difficulty-btn {
+    margin: 5px; /* 外边距 */
+    padding: 10px 20px; /* 内边距 */
+    transition: background-color 0.3s ease; /* 背景颜色过渡效果 */
+}
+
+/*按钮背景颜色，在js的监听器里面已经定义好了 */
+.category-btn:hover {
+    background-color: #45a049; /* 悬停时背景颜色变化 */
+}
+.difficulty-btn:hover {
+    background-color: #0056b3; /* 悬停时背景颜色变化 */
+}
+
+/*错题详解按钮*/
+.explain-btn {
+    background-color: #ff9800; /* 背景颜色 */
+    padding: 5px 10px; /* 内边距 */
+    margin-top: 10px; /* 上外边距 */
+}
+
+.explain-btn:hover {
+    background-color: #e68a00; /* 悬停时背景颜色变化 */
+}
+/* 提交的按钮格式*/
+button[type="submit"] {
+    display: block; /* 块级元素 */
+    margin: 20px auto; /* 左右居中 */
+    padding: 10px 20px; /* 内边距 */
+    background-color: #4CAF50; /* 背景颜色 */
+    color: white; /* 文字颜色 */
+    border: none; /* 去掉边框 */
+    border-radius: 4px; /* 圆角 */
+    cursor: pointer; /* 鼠标悬停时变成指针 */
+    font-size: 16px; /* 设置字体大小 */
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049; /* 悬停时背景颜色变化 */
+}
+/* ------------上面为按钮格式----------没有的格式继承通用按钮格式里面有定义------------*/
+
+
+
+/*整个右侧的大格式 */
+.content {
+    display: flex; /* 内容区域使用弹性布局 */
+    flex-grow: 1; /* 占据剩余空间 */
+    padding: 20px; /* 内边距 */
+    overflow-y: auto; /* 垂直滚动条 */
+}
+
+/*右侧的格式 */
+#dynamicContent {
+    display: flex; /* 弹性布局 */
+    gap: 20px; /* 子元素间距 */
+    flex-wrap: wrap; /* 自动换行 */
+}
+/*右侧的格式 */
+.right-content {
+    flex: 1; /* 占据剩余空间 */
+    min-width: 300px; /* 最小宽度 */
+    padding: 0; /* 内边距 */
+    display: flex; /* 弹性布局 */
+    flex-direction: column; /* 垂直排列 */
+    align-items: center; /* 水平居中对齐 */
+}
+
+/*这个是右侧边框的大小的  */
+.right-column {
+    margin: 0 auto; /* 水平居中 */
+    text-align: center; /* 文本内容居中 */
+    padding: 20px; /* 内边距 */
+    width: 100%; /* 宽度 */
+    width: 700px; /* 宽度 */
+    padding: 20px; /* 内边距 */
+}
+
+/* ------------------上面为整个右侧边框的格式------------------------------------------*/
+
+/*@media (max-width: 768px)：这是一个媒体查询，表示当视口的最大宽度为 768px 或更小时，应用其中的样式规则。这通常用于响应式设计中，
+以适应不同尺寸的屏幕，特别是移动设备手机和平板电脑 */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* 垂直排列 */
+    }
+    #dynamicContent {
+        flex-direction: column; /* 垂直排列 */
+        gap: 15px; /* 子元素间距 */
+    }
+    .right-content {
+        min-width: 100%; /* 最小宽度 */
+        padding: 10px; /* 内边距 */
+    }
+}
+
+/* 2级标题全部加下划线*/
+#categoryColumn h2,
+#wrongRecordContent h2,
+#challengeRecordContent h2,
+#difficultyColumn h2,
+#analysisContent h2{
+    margin-bottom: 15px; /* 下外边距 */
+    color: #333; /* 文字颜色 */
+    font-size: 1.2em; /* 字体大小 */
+    font-weight: bold; /* 加粗 */
+    border-bottom: 2px solid #ddd; /* 底部边框 */
+    padding-bottom: 5px; /* 底部内边距 */
+}
+/*--------------------下面涉及题目及选项的格式--------------------------------------*/
+/*错题详解内容格式 */
+.explanation {
+    background-color: #f0f0f0; /* 设置背景颜色 */
+    padding: 10px; /* 设置内边距 */
+    border-radius: 4px; /* 设置圆角 */
+    white-space: pre-wrap; /* 保留空白符序列，自动换行 */
+    margin-top: 10px; /* 设置上外边距 */
+}
+
+/*做题列表的的题目容器大格式 */
+.question {
+    border: 1px solid #ddd; /* 边框 */
+    padding: 15px; /* 内边距 */
+    margin: 10px 0; /* 上下外边距 */
+    border-radius: 5px; /* 圆角 */
+    background-color: #f9f9f9; /* 背景颜色 */
+    margin-bottom: 20px; /* 设置题目底部外边距 */
+}
+/*默认消息展示 */
+#defaultMessage {
+    display: block; /* 显示为块级元素 */
+}
+/*做题列表的查看错题格式格式 */
+.wrong-question {
+    border: 1px solid #ddd; /* 设置边框 */
+    padding: 15px; /* 设置内边距 */
+    margin: 10px 0; /* 设置上下外边距 */
+    border-radius: 5px; /* 设置圆角 */
+    background-color: #f9f9f9; /* 设置背景颜色 */
+}
+
+#wrong-questions {
+    margin-top: 20px; /* 设置上外边距 */
+}
+/*
+a：这是一个 元素选择器，表示匹配所有的 <a> 标签。<a> 标签通常用于创建超链接。
+.question-link：这是一个 类选择器，表示匹配所有 class 属性包含 "question-link" 的元素。
+类似<a href="/questions/1" class="question-link">问题一</a>
+有需要再放开
+a.question-link {
+    color: blue;  链接文字颜色
+    text-decoration: underline;  下划线
+    cursor: pointer;  指针样式
+}*/
+
+/*.question p 是一个 CSS 选择器，用于选中所有位于 .question 元素内部的 <p>（段落）元素。它的作用是为这些嵌套在 .question 内部的段落设置特定的样式规则。*/
+.question p {
+    font-size: 18px; /* 设置字体大小 */
+    text-align: left; /* 设置文本左对齐 */
+    font-weight: normal; /* 设置字体加粗为正常 */
+    font-family: Arial, sans-serif; /* 设置字体系列 */
+}
+
+/*显示题目和选项的格式*/
+.options-container {
+    display: flex; /* 弹性布局 */
+    gap: 15px; /* 设置选项之间的间距 */
+    justify-content: flex-start; /* 左对齐 */
+    flex-wrap: wrap; /* 当子元素超出容器宽度时自动换行 */
+}
+/*选项和格式*/
+.option {
+    display: inline-flex; /* 行内弹性布局 */
+    align-items: center; /* 垂直居中对齐 */
+    margin: 5px 0; /* 上下外边距 */
+}
+
+/*单选按钮的格式，name属性为题目ID，value属性为选项键，必填项*/
+.option input[type="radio"] {
+    margin-right: 5px; /* 右外边距 增大单选按钮与文字的间距*/
+}
+/*--------------------上面涉及题目和选项的格式--------------------------------------*/
+/*录题时，1、2、3、4、提示的格式*/
+.left-aligned-label {
+    display: block; /* 块级元素 */
+    font-weight: bold; /* 加粗 */
+    text-align: left; /* 文本左对齐 */
+    margin-bottom: 5px; /* 下外边距 */
+}
+/* 所有表格菜单的格式*/
+table {
+    width: 100%; /* 表格宽度占满父容器 */
+    border-collapse: collapse; /* 合并表格边框 */
+}
+th, td {
+    border: 1px solid #ddd; /* 单元格边框样式 */
+    padding: 8px; /* 单元格内边距 */
+}
+th {
+    background-color: #f2f2f2; /* 表头背景颜色 */
+}
+
+/*该内容隐藏*/
+.hidden {
+    display: none; /* 隐藏元素 */
+}
+
+/*-------------------下面是分页的格式--------------------------------*/
+/* 整个分页样式 */
+.pagination {
+    margin-top: 20px; /* 设置顶部外边距 */
+    display: flex; /* 使用弹性盒子布局 */
+    gap: 10px; /* 设置分页按钮之间的间距 */
+}
+/*quiz分页容器中，元素内部的 <a>（段落）元素和<span>元素 */
+.pagination a, .pagination span {
+    padding: 5px 10px; /* 设置内边距 */
+    background-color: #4CAF50; /* 设置背景颜色 */
+    color: white; /* 设置文字颜色 */
+    text-decoration: none; /* 去掉下划线 */
+    border-radius: 3px; /* 设置圆角 */
+}
+.pagination a:hover {
+    background-color: #45a049; /* 悬停时背景颜色变化 */
+}
+/*当这两个选择器组合使用时（即 .pagination .current），它指定了只有当 .current 类应用于 .pagination 容器内的元素时，下面的样式规则才会生效*/
+.pagination .current {
+    background-color: #007BFF; /* 设置当前页码的背景颜色 */
+}
+.pagination .disabled {
+    background-color: #ccc; /* 设置禁用状态的背景颜色 */
+    cursor: not-allowed; /* 设置鼠标悬停时的光标样式 */
+}
+/*-----------------------上面是分页的格式-------------------------------------- */
+
+
+
+
